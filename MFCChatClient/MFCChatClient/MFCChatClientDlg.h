@@ -34,4 +34,5 @@ protected:
 public:
 	afx_msg void OnBnClickedClearmsgBtn();
 	afx_msg void OnCbnSelchangeCombo1();
+	afx_msg void OnBnClickedConnectBtn();
 };

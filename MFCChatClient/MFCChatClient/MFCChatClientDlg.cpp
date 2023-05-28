@@ -7,6 +7,7 @@
 #include "MFCChatClient.h"
 #include "MFCChatClientDlg.h"
 #include "afxdialogex.h"
+#include <Windows.h>
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -67,6 +68,7 @@ BEGIN_MESSAGE_MAP(CMFCChatClientDlg, CDialogEx)
 	ON_WM_QUERYDRAGICON()
 	ON_BN_CLICKED(IDC_CLEARMSG_BTN, &CMFCChatClientDlg::OnBnClickedClearmsgBtn)
 	ON_CBN_SELCHANGE(IDC_COMBO1, &CMFCChatClientDlg::OnCbnSelchangeCombo1)
+	ON_BN_CLICKED(IDC_CONNECT_BTN, &CMFCChatClientDlg::OnBnClickedConnectBtn)
 END_MESSAGE_MAP()
 
 
@@ -166,4 +168,21 @@ void CMFCChatClientDlg::OnBnClickedClearmsgBtn()
 void CMFCChatClientDlg::OnCbnSelchangeCombo1()
 {
 	// TODO: 在此添加控件通知处理程序代码
+}
+
+
+void CMFCChatClientDlg::OnBnClickedConnectBtn()
+{
+	
+	CString strPort, strIP;
+
+	//从控件里面获取内容
+	GetDlgItem(IDC_PORT_EDIT)->GetWindowText(strPort);
+	GetDlgItem(IDC_IPADDRESS1)->GetWindowText(strIP);
+
+	//CSting转char*
+	USES_CONVERSION;
+	LPCSTR szPort = (LPCSTR)T2A(strPort);
+	LPCSTR szIP = (LPCSTR)T2A(strIP);
+	TRACE("Port = %s, IP = %s", szPort, szIP);
 }
