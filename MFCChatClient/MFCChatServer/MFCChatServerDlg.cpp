@@ -59,6 +59,7 @@ CMFCChatServerDlg::CMFCChatServerDlg(CWnd* pParent /*=nullptr*/)
 void CMFCChatServerDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialogEx::DoDataExchange(pDX);
+	DDX_Control(pDX, IDC_MSG_LIST, m_list);
 }
 
 BEGIN_MESSAGE_MAP(CMFCChatServerDlg, CDialogEx)
@@ -101,6 +102,7 @@ BOOL CMFCChatServerDlg::OnInitDialog()
 	SetIcon(m_hIcon, FALSE);		// 设置小图标
 
 	// TODO: 在此添加额外的初始化代码
+	GetDlgItem(IDC_PORT_EDIT)->SetWindowText(_T("8888"));
 
 	return TRUE;  // 除非将焦点设置到控件，否则返回 TRUE
 }
@@ -167,4 +169,29 @@ void CMFCChatServerDlg::OnBnClickedStartBtn()
 	USES_CONVERSION;
 	LPCSTR szPort = (LPCSTR)T2A(strPort);
 	TRACE("Port = %s", szPort);
+
+	int iPort = _ttoi(strPort);
+
+	//创建服务器Socket对象
+	m_server = new CServerSocket;
+	//创建Socket
+	if (!m_server->Create(iPort)) {
+		TRACE("m_server create error code: %d", GetLastError());
+		return;
+	}
+	else {
+		TRACE("m_server create success");
+	}
+
+	if (!m_server->Listen()) {
+		TRACE("m_server listen error code: %d", GetLastError());
+		return;
+	}
+
+	CString str;
+	m_time = CTime::GetCurrentTime();
+	str = m_time.Format("%X ");
+	str += _T("建立服务");
+	m_list.AddString(str);
+	UpdateData(false);
 }
