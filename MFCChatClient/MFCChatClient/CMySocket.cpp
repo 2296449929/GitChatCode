@@ -26,4 +26,28 @@ void CMySocket::OnConnect(int nErrorCode)
 void CMySocket::OnReceive(int nErrorCode)
 {
 	TRACE("######OnReceive");
+
+	CMFCChatClientDlg* dlg = (CMFCChatClientDlg*)AfxGetApp()->GetMainWnd();
+
+	char szRecvBuf[200] = {0};
+	Receive(szRecvBuf, 200, 0);
+
+	TRACE("########## ReceiveServerMsg: %s", szRecvBuf);
+
+	//显示buf
+	USES_CONVERSION;
+	CString strRecvMsg = A2W(szRecvBuf);
+
+	//显示到列表框内
+	CString strShow = _T("服务端: ");
+	CString strTime;
+
+	dlg->m_time = CTime::GetCurrentTime();
+	strTime = dlg->m_time.Format("%X ");
+
+	strShow = strTime + strShow;
+	strShow += strRecvMsg;
+	dlg->m_list.AddString(strShow);
+
+	CAsyncSocket::OnReceive(nErrorCode);
 }

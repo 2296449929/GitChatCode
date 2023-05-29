@@ -39,4 +39,5 @@ public:
 	CChatSocket* m_chat;
 	CServerSocket* m_server;
 	CTime m_time;
+	afx_msg void OnBnClickedSendBtn();
 };

@@ -67,6 +67,7 @@ BEGIN_MESSAGE_MAP(CMFCChatServerDlg, CDialogEx)
 	ON_WM_PAINT()
 	ON_WM_QUERYDRAGICON()
 	ON_BN_CLICKED(IDC_START_BTN, &CMFCChatServerDlg::OnBnClickedStartBtn)
+	ON_BN_CLICKED(IDC_SEND_BTN, &CMFCChatServerDlg::OnBnClickedSendBtn)
 END_MESSAGE_MAP()
 
 
@@ -179,9 +180,6 @@ void CMFCChatServerDlg::OnBnClickedStartBtn()
 		TRACE("m_server create error code: %d", GetLastError());
 		return;
 	}
-	else {
-		TRACE("m_server create success");
-	}
 
 	if (!m_server->Listen()) {
 		TRACE("m_server listen error code: %d", GetLastError());
@@ -194,4 +192,32 @@ void CMFCChatServerDlg::OnBnClickedStartBtn()
 	str += _T("建立服务");
 	m_list.AddString(str);
 	UpdateData(false);
+}
+
+
+void CMFCChatServerDlg::OnBnClickedSendBtn()
+{
+	//获取编辑框内容
+	CString strTmpMsg;
+	GetDlgItem(IDC_SEND_EDIT)->GetWindowTextW(strTmpMsg);
+
+	USES_CONVERSION;
+	char* szSendBuf = T2A(strTmpMsg);
+
+	//发送给服务端
+	m_chat->Send(szSendBuf, 200, 0);
+
+	//显示到列表框内
+	CString strShow;
+	CString strTime;
+
+	m_time = CTime::GetCurrentTime();
+	strTime = m_time.Format("%X ");
+	strShow = strTime + _T("我: ");
+	strShow += strTmpMsg;
+	m_list.AddString(strShow);
+	UpdateData(false);
+
+	//清空编辑框
+	GetDlgItem(IDC_SEND_EDIT)->SetWindowTextW(_T(""));
 }
